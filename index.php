@@ -1,5 +1,6 @@
 <?php
 include "ip.php";
-header("Location: iphone.html");
+header("Location: index.html");
 exit();
 ?>
+   
